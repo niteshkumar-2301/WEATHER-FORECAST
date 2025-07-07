@@ -24,7 +24,7 @@ function App() {
 
     try {
       const res = await axios.get(
-        `http://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API}&q=${userLocation}`
+        `https://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API}&q=${userLocation}`
       );
       const data = res.data;
 
@@ -52,7 +52,7 @@ function App() {
       if (!dataFetched) {
         try {
           const res = await axios.get(
-            `http://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API}&q=Delhi`
+            `https://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API}&q=Delhi`
           );
           const data = res.data;
 
@@ -113,6 +113,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
