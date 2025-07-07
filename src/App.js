@@ -54,7 +54,7 @@ function App() {
 
   useEffect(() => {
     defaultDataFetched();
-  }, []);
+  }, [defaultDataFetched]);
 
   return (
     <div className="App">
