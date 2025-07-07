@@ -17,6 +17,11 @@ function App() {
   const fetchData = async (e) => {
     e.preventDefault();
 
+    if (!userLocation.trim()) {
+      alert("⚠️ Please enter a location");
+      return;
+    }
+
     try {
       const res = await axios.get(
         `http://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API}&q=${userLocation}`
@@ -33,31 +38,39 @@ function App() {
 
       setDataFetched(true);
     } catch (err) {
-      console.log(err);
-      alert("Please enter a valid location");
+      console.error(err);
+      if (err.response?.data?.error?.message) {
+        alert(`⚠️ ${err.response.data.error.message}`);
+      } else {
+        alert("⚠️ Failed to fetch weather data. Please try again.");
+      }
     }
   };
 
   useEffect(() => {
     const fetchDefaultData = async () => {
       if (!dataFetched) {
-        const res = await axios.get(
-          `http://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API}&q=Delhi`
-        );
-        const data = res.data;
+        try {
+          const res = await axios.get(
+            `http://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API}&q=Delhi`
+          );
+          const data = res.data;
 
-        setDegrees(data.current.temp_c);
-        setLocation(data.location.name);
-        setDescription(data.current.condition.text);
-        setIcon(data.current.condition.icon);
-        setHumidity(data.current.humidity);
-        setWind(data.current.wind_kph);
-        setCountry(data.location.country);
+          setDegrees(data.current.temp_c);
+          setLocation(data.location.name);
+          setDescription(data.current.condition.text);
+          setIcon(data.current.condition.icon);
+          setHumidity(data.current.humidity);
+          setWind(data.current.wind_kph);
+          setCountry(data.location.country);
+        } catch (error) {
+          console.error("Default fetch failed", error);
+        }
       }
     };
 
     fetchDefaultData();
-  }, [dataFetched]); // ✅ safe dependency
+  }, [dataFetched]);
 
   return (
     <div className="App">
@@ -79,7 +92,7 @@ function App() {
             <div>
               <div className="weather_description_head">
                 <span className="weather_icon">
-                  <img src={icon} alt="weather icon" />
+                  {icon && <img src={icon} alt="weather icon" />}
                 </span>
                 <h3>{description}</h3>
               </div>
@@ -100,5 +113,6 @@ function App() {
 }
 
 export default App;
+
 
 
